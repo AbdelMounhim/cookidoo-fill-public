@@ -737,8 +737,7 @@
         <div class="status" id="cookidoo-filler-status"></div>
         <div class="help">
           <strong>Comment obtenir le JSON ?</strong><br>
-          Copiez le prompt depuis <a href="https://abdelmounhim.github.io/cookidoo-fill-public/" target="_blank">la page d'instructions</a>
-          et collez-le dans ChatGPT, Claude ou Gemini avec le nom de votre recette.
+          Copiez le prompt depuis la page d'instructions et collez-le dans ChatGPT, Claude ou Gemini avec le nom de votre recette.
         </div>
       </div>
     `;
