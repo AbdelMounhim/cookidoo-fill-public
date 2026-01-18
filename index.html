@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cookidoo Recipe Filler - Ajoutez vos recettes automatiquement</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍳</text></svg>">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Cookidoo Recipe Filler</h1>
+      <p class="subtitle">Ajoutez vos recettes Thermomix sur Cookidoo en quelques clics</p>
+    </header>
+
+    <main>
+      <!-- ETAPE 1 -->
+      <section class="step">
+        <div class="step-header">
+          <span class="step-number">1</span>
+          <h2>Generez votre recette avec l'IA</h2>
+        </div>
+        <div class="step-content">
+          <p>Copiez le prompt ci-dessous et collez-le dans <strong>ChatGPT</strong>, <strong>Claude</strong> ou <strong>Gemini</strong> (gratuit avec votre compte).</p>
+
+          <div class="prompt-box">
+            <div class="prompt-header">
+              <span>Prompt a copier</span>
+              <button class="copy-btn" onclick="copyPrompt()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                Copier
+              </button>
+            </div>
+            <pre id="prompt-text">Tu es un expert en recettes Thermomix TM7. Genere une recette complete adaptee au Thermomix.
+
+IMPORTANT: Tu dois retourner UNIQUEMENT un objet JSON valide, sans aucun texte avant ou apres, sans bloc de code markdown.
+
+Le JSON doit suivre EXACTEMENT ce format:
+
+{
+  "titre": "Nom complet de la recette",
+  "tempsPreparation": 20,
+  "tempsTotal": 50,
+  "portions": 4,
+  "ingredients": [
+    {
+      "categorie": "Nom de la categorie (ex: Pour la pate)",
+      "items": [
+        { "nom": "farine", "quantite": 500, "unite": "g", "notes": "" }
+      ]
+    }
+  ],
+  "etapes": [
+    {
+      "numero": 1,
+      "titre": "Titre de l'etape",
+      "description": "Description detaillee avec les parametres Thermomix",
+      "ingredients": ["liste des ingredients utilises dans cette etape"],
+      "temperature": "120°C ou null",
+      "duree": "5 min ou 30 sec",
+      "vitesse": "5 ou Mijotage",
+      "details": "Hacher, Petrir, Sens Inverse, etc."
+    }
+  ],
+  "conseils": [
+    "Conseil 1",
+    "Conseil 2"
+  ]
+}
+
+REGLES IMPORTANTES:
+- Les temperatures vont de 37°C a 120°C (ou Varoma pour la vapeur)
+- Les vitesses vont de 1 a 10, plus "Mijotage" (vitesse cuillere) ou "Turbo"
+- Pour le sens inverse, mettre "Sens Inverse" dans details
+- Les durees sont en "X min" ou "X sec"
+- notes peut etre vide "" si pas de note
+- Unites valides: g, kg, ml, L, cl, c. a cafe, c. a soupe
+
+REGLES POUR LES INGREDIENTS:
+- "40 gr d'huile d'olive" -> quantite: 40, unite: "g", nom: "huile d'olive"
+- "3 gousses d'ail" -> quantite: 3, unite: null, nom: "gousses d'ail"
+- "5 bananes" -> quantite: 5, unite: null, nom: "bananes"
+- "3 oeufs" -> quantite: 3, unite: null, nom: "oeufs"
+- NE JAMAIS utiliser "pieces" ou "unite" comme unite, mettre null a la place
+- L'unite fait partie du nom quand c'est un comptable (gousses, tranches, feuilles...)
+
+Genere une vraie recette Thermomix pour : [NOM DE VOTRE RECETTE]</pre>
+          </div>
+
+          <div class="tip">
+            <strong>Astuce :</strong> Remplacez <code>[NOM DE VOTRE RECETTE]</code> par le plat que vous souhaitez (ex: "tiramisu", "tajine d'agneau", etc.)
+          </div>
+        </div>
+      </section>
+
+      <!-- ETAPE 2 -->
+      <section class="step">
+        <div class="step-header">
+          <span class="step-number">2</span>
+          <h2>Installez l'outil d'import</h2>
+        </div>
+        <div class="step-content">
+          <div class="install-option">
+            <h3>Option A - Bookmarklet (le plus simple)</h3>
+            <p>Glissez ce bouton dans votre barre de favoris :</p>
+
+            <div class="bookmarklet-container">
+              <a class="bookmarklet" id="bookmarklet-link" href="#">Remplir Cookidoo</a>
+              <p class="bookmarklet-hint">Cliquez et maintenez, puis glissez vers vos favoris</p>
+            </div>
+
+            <details class="install-help">
+              <summary>Comment installer le bookmarklet ?</summary>
+              <ol>
+                <li>Affichez la barre de favoris (Ctrl+Maj+B ou Cmd+Maj+B)</li>
+                <li>Cliquez sur le bouton vert "Remplir Cookidoo"</li>
+                <li>Maintenez le clic et glissez-le vers la barre de favoris</li>
+                <li>Relacher pour le deposer</li>
+              </ol>
+              <p>Alternative : clic droit sur le bouton > "Ajouter aux favoris"</p>
+            </details>
+          </div>
+
+          <div class="install-option coming-soon">
+            <h3>Option B - Extension Chrome</h3>
+            <p>Bientot disponible sur le Chrome Web Store.</p>
+            <button class="btn-disabled" disabled>Extension a venir</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ETAPE 3 -->
+      <section class="step">
+        <div class="step-header">
+          <span class="step-number">3</span>
+          <h2>Remplissez Cookidoo</h2>
+        </div>
+        <div class="step-content">
+          <ol class="numbered-list">
+            <li>Connectez-vous sur <a href="https://cookidoo.fr" target="_blank">cookidoo.fr</a></li>
+            <li>Allez dans <strong>Mes recettes</strong> > <strong>Creer une recette</strong></li>
+            <li>Cliquez sur le bookmarklet "Remplir Cookidoo" dans vos favoris</li>
+            <li>Collez le JSON genere par l'IA</li>
+            <li>Cliquez sur <strong>Remplir la recette</strong></li>
+            <li>Repetez sur la page des ingredients puis des etapes</li>
+          </ol>
+
+          <div class="demo-gif">
+            <div class="placeholder">
+              Demo video a venir
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQ -->
+      <section class="faq">
+        <h2>Questions frequentes</h2>
+
+        <details>
+          <summary>C'est gratuit ?</summary>
+          <p>Oui, completement gratuit. Vous utilisez l'IA de votre choix (ChatGPT gratuit, Claude, Gemini...) et le bookmarklet est open source.</p>
+        </details>
+
+        <details>
+          <summary>Ca marche avec quel Thermomix ?</summary>
+          <p>Les recettes sont optimisees pour TM7, mais fonctionnent aussi sur TM6 et TM5.</p>
+        </details>
+
+        <details>
+          <summary>L'IA peut-elle se tromper ?</summary>
+          <p>Oui, verifiez toujours la recette avant de cuisiner. L'IA peut parfois generer des temps ou temperatures incorrects.</p>
+        </details>
+
+        <details>
+          <summary>Le bookmarklet ne fonctionne pas</summary>
+          <p>Assurez-vous d'etre sur la page d'edition d'une recette sur cookidoo.fr. Essayez de recharger la page et de relancer le bookmarklet.</p>
+        </details>
+
+        <details>
+          <summary>Comment signaler un bug ?</summary>
+          <p>Ouvrez une issue sur <a href="https://github.com/votre-username/cookidoo-fill-public/issues" target="_blank">GitHub</a>.</p>
+        </details>
+      </section>
+    </main>
+
+    <footer>
+      <p>Projet open source - <a href="https://github.com/votre-username/cookidoo-fill-public" target="_blank">Code source sur GitHub</a></p>
+      <p class="disclaimer">Ce projet n'est pas affilie a Vorwerk ou Cookidoo.</p>
+    </footer>
+  </div>
+
+  <div id="toast" class="toast">Prompt copie !</div>
+
+  <script>
+    // Charger le script du filler et creer le bookmarklet
+    fetch('filler.js')
+      .then(r => r.text())
+      .then(code => {
+        // Minifier basiquement (retirer les commentaires multi-lignes et compresser)
+        const minified = code
+          .replace(/\/\*[\s\S]*?\*\//g, '') // Retirer commentaires /* */
+          .replace(/\/\/.*$/gm, '')          // Retirer commentaires //
+          .replace(/\n\s*\n/g, '\n')         // Retirer lignes vides
+          .trim();
+
+        const bookmarklet = 'javascript:' + encodeURIComponent('(function(){' + minified + '})();');
+        document.getElementById('bookmarklet-link').href = bookmarklet;
+      })
+      .catch(e => {
+        console.error('Erreur chargement filler.js:', e);
+        // Fallback: bookmarklet qui charge le script depuis GitHub Pages
+        const fallback = "javascript:(function(){var s=document.createElement('script');s.src='https://votre-username.github.io/cookidoo-fill-public/filler.js';document.body.appendChild(s);})();";
+        document.getElementById('bookmarklet-link').href = fallback;
+      });
+
+    // Copier le prompt
+    function copyPrompt() {
+      const text = document.getElementById('prompt-text').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        showToast('Prompt copie !');
+      }).catch(() => {
+        // Fallback pour les navigateurs anciens
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        showToast('Prompt copie !');
+      });
+    }
+
+    // Afficher le toast
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('visible');
+      setTimeout(() => toast.classList.remove('visible'), 2000);
+    }
+  </script>
+</body>
+</html>
