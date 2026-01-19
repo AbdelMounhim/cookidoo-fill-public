@@ -202,13 +202,14 @@ Genere une vraie recette Thermomix pour : [NOM DE VOTRE RECETTE]</pre>
       .then(r => r.text())
       .then(code => {
         // Minifier basiquement (retirer les commentaires multi-lignes et compresser)
+        // ATTENTION: Ne pas retirer les // car ca casse les URLs https://
         const minified = code
           .replace(/\/\*[\s\S]*?\*\//g, '') // Retirer commentaires /* */
-          .replace(/\/\/.*$/gm, '')          // Retirer commentaires //
+          .replace(/^\s*\/\/.*$/gm, '')      // Retirer commentaires // en debut de ligne seulement
           .replace(/\n\s*\n/g, '\n')         // Retirer lignes vides
           .trim();
 
-        const bookmarklet = 'javascript:' + encodeURIComponent('(function(){' + minified + '})();');
+        const bookmarklet = 'javascript:' + encodeURIComponent(minified);
         document.getElementById('bookmarklet-link').href = bookmarklet;
       })
       .catch(e => {
