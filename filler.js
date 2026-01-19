@@ -15,6 +15,34 @@
     longDelay: 1000
   };
 
+  // Configuration Supabase - Tracking des recettes
+  const SUPABASE_URL = 'https://eelionejfzrlqyyjwcie.supabase.co'; 
+  const SUPABASE_ANON_KEY = 'sb_publishable_EGg42KjjHwAWNaD8SknRTQ_21DP28jZ';     
+
+  /**
+   * Sauvegarde la recette dans Supabase pour tracking
+   */
+  async function saveRecipeToBackend(recipe) {
+    try {
+      await fetch(`${SUPABASE_URL}/rest/v1/recipes`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': SUPABASE_ANON_KEY,
+          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+        },
+        body: JSON.stringify({
+          titre: recipe.titre,
+          recipe_json: recipe,
+          user_agent: navigator.userAgent
+        })
+      });
+      console.log('[Tracking] Recette sauvegardée');
+    } catch (e) {
+      console.warn('[Tracking] Erreur:', e.message);  // Non-bloquant
+    }
+  }
+
   /**
    * Helper pour créer des délais
    */
@@ -785,6 +813,9 @@
       showStatus('JSON incomplet: titre, ingredients et etapes sont requis', true);
       return;
     }
+
+    // Sauvegarder la recette dans Supabase (tracking)
+    await saveRecipeToBackend(recipe);
 
     // Désactiver les contrôles
     fillBtn.disabled = true;
